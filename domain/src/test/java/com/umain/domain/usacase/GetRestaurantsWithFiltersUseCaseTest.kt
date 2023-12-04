@@ -69,7 +69,9 @@ class GetRestaurantsWithFiltersUseCaseTest {
     fun testRestaurantWithFilterFailureFlow() {
         runTest {
             val fakeThrowable = Exception("Something went wrong")
-            `when`(repository.getRestaurant()).thenThrow(fakeThrowable)
+            `when`(repository.getRestaurant()).thenAnswer {
+                throw fakeThrowable
+            }
             `when`(repository.getFilterById(anyString())).then {
                 val filterId = it.getArgument<String>(0)
                 getFilterInfo(filterId)

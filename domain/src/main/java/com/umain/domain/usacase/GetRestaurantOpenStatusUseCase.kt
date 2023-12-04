@@ -15,9 +15,7 @@ class GetRestaurantOpenStatusUseCase @Inject constructor(private val foodDeliver
                 emit(ResponseState.Loading())
                 emit(
                     ResponseState.Success(
-                        foodDeliveryRepository.getRestaurantOpenStatus(
-                            restaurantId
-                        )
+                        foodDeliveryRepository.getRestaurantOpenStatus(restaurantId)
                     )
                 )
 

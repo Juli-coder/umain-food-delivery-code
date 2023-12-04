@@ -26,7 +26,6 @@ class FoodDeliveryRepositoryImpl @Inject constructor(
 
     override suspend fun getRestaurant(): List<Restaurant> {
         return restaurantMapper.map(foodDeliveryApi.getRestaurants())
-
     }
 
     override suspend fun getRestaurantOpenStatus(restaurantId: String): RestaurantOpenStatus {

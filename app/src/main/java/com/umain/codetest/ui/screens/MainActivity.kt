@@ -19,16 +19,20 @@ import com.umain.codetest.ui.screens.restaurantDetail.RestaurantDetailScreen
 import com.umain.codetest.ui.screens.restaurantDetail.RestaurantDetailViewModel
 import com.umain.domain.entities.Restaurant
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var gson: Gson
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
                 // A surface container using the 'background' color from the theme
                 val navController = rememberNavController()
-                val gson = Gson()
 
                 NavHost(
                     navController = navController,
