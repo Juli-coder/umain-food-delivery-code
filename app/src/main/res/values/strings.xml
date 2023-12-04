@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Juli Umain Code Test</string>
+    <string name="cd_restaurant_icon">Restaurant image</string>
+    <string name="cd_rating_star">Rating star</string>
+    <string name="cd_filter_icon">filter icon</string>
+    <string name="restaurant_status_open">Open</string>
+    <string name="restaurant_status_close">Close</string>
+    <string name="failed_to_load_status">Failed to load status</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="no_restaurants_found">No restaurants found</string>
+</resources>
