@@ -1,6 +1,5 @@
 package com.umain.codetest.ui.screens.restaurantDetail
 
-import android.view.View
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardElevation
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,21 +23,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.Navigation
 import coil.compose.AsyncImage
 import com.umain.codetest.R
 import com.umain.codetest.ui.theme.AppTheme
 import com.umain.codetest.ui.theme.NegativeColor
 import com.umain.codetest.ui.theme.PositiveColor
 import com.umain.codetest.ui.theme.SubtitlesColor
-import com.umain.codetest.utils.UiState
 import com.umain.codetest.utils.UiState.*
 import com.umain.domain.entities.Restaurant
-import com.umain.domain.entities.RestaurantOpenStatus
 
 @Composable
 fun RestaurantDetailScreen(
@@ -86,7 +82,7 @@ fun RestaurantDetailComponent(
                     .height(250.dp)
             )
             IconButton(
-                modifier = Modifier.padding(top = 20.dp),
+                modifier = Modifier.padding(top = 20.dp).testTag("backButton"),
                 onClick = {
                     onBackPress()
                 }
@@ -118,11 +114,14 @@ fun RestaurantDetailComponent(
                     )
                     when (viewData.state) {
                         LOADING -> {
-                            CircularProgressIndicator()
+                            CircularProgressIndicator(
+                                modifier = Modifier.testTag("openStatusLoader")
+                            )
                         }
 
                         LOADED -> {
                             Text(
+                                modifier = Modifier.testTag("restaurantOpenStatus"),
                                 text = stringResource(if (viewData.openStatus.isCurrentlyOpen) R.string.restaurant_status_open else R.string.restaurant_status_close),
                                 style = MaterialTheme.typography.titleLarge.copy(
                                     color = if (viewData.openStatus.isCurrentlyOpen) PositiveColor else NegativeColor
@@ -132,6 +131,7 @@ fun RestaurantDetailComponent(
 
                         ERROR -> {
                             Text(
+                                modifier =  Modifier.testTag("restaurantFailStatus"),
                                 text = stringResource(R.string.failed_to_load_status),
                                 style = MaterialTheme.typography.titleLarge.copy(
                                     color = NegativeColor
@@ -147,7 +147,7 @@ fun RestaurantDetailComponent(
 
 
 @Preview
-@Composable()
+@Composable
 fun RestaurantDetail() {
     AppTheme {
         RestaurantDetailComponent(Restaurant(), RestaurantDetailViewModel.ViewData(), onBackPress = {})

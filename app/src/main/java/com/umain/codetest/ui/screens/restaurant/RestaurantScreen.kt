@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,12 +55,12 @@ fun RestaurantScreen(
             when (viewData.state) {
                 UiState.LOADING -> {
                     CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center).testTag("viewLoader")
                     )
                 }
 
                 UiState.LOADED -> {
-                    Column {
+                    Column(modifier = Modifier.fillMaxSize().testTag("successView")) {
                         FilterComponent(
                             filters = viewData.filters,
                             onClick = { clickedFilterId ->
@@ -69,10 +70,10 @@ fun RestaurantScreen(
                         if (viewData.restaurants.isEmpty()) {
                             Text(
                                 text = stringResource(R.string.no_restaurants_found),
-                                modifier = Modifier.align(CenterHorizontally).padding(16.dp),
+                                modifier = Modifier.align(CenterHorizontally).padding(16.dp)
+                                    .testTag("noRestaurant"),
                             )
                         } else {
-
                             RestaurantComponent(
                                 restaurants = viewData.restaurants,
                                 onRestaurantSelect = onRestaurantSelect
@@ -84,43 +85,10 @@ fun RestaurantScreen(
                 UiState.ERROR -> {
                     Text(
                         text = stringResource(R.string.something_went_wrong),
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center).testTag("errorView")
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun FilterComponent(filters: List<FilterInfo>, onClick: (String) -> Unit) {
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 15.dp)
-    ) {
-        items(
-            items = filters,
-            key = { it.id }) { item ->
-            FilterItem(
-                filterInfo = item,
-                onClick = onClick
-            )
-        }
-    }
-}
-
-@Composable
-fun RestaurantComponent(restaurants: List<Restaurant>, onRestaurantSelect: (Restaurant) -> Unit) {
-    LazyColumn(
-        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp),
-    ) {
-        items(
-            items = restaurants,
-            key = { it.id }
-        ) { item ->
-            RestaurantItem(
-                restaurant = item,
-                onClick = onRestaurantSelect
-            )
         }
     }
 }
