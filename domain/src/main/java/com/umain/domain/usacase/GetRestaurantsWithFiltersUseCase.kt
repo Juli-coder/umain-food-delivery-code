@@ -4,6 +4,10 @@ import com.umain.domain.ResponseState
 import com.umain.domain.entities.FilterInfo
 import com.umain.domain.entities.RestaurantInfo
 import com.umain.domain.repositories.IFoodDeliveryRepository
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -22,21 +26,27 @@ class GetRestaurantsWithFiltersUseCase @Inject constructor(
                     restaurant.filterIds
                 }.flatten().distinct()
 
-                val allFilters = mutableListOf<FilterInfo>()
+                val allFilters = mutableListOf<Deferred<FilterInfo>>()
 
-                filterIds.forEach { filterId ->
-                    allFilters.add(foodDeliveryRepository.getFilterById(filterId))
+                coroutineScope {
+                    filterIds.forEach { filterId ->
+                        val filters = async {
+                            foodDeliveryRepository.getFilterById(filterId)
+                        }
+                        allFilters.add(filters)
+                    }
                 }
 
-                restaurants.forEach { restaurant ->
+                val filtersList = allFilters.awaitAll()
 
-                    restaurant.filterNames = allFilters.filter { filterInfo ->
+                restaurants.forEach { restaurant ->
+                    restaurant.filterNames = filtersList.filter { filterInfo ->
                         restaurant.filterIds.contains(filterInfo.id)
                     }.map { it.name }
 
                 }
 
-                val restaurantInfo = RestaurantInfo(allFilters, restaurants)
+                val restaurantInfo = RestaurantInfo(filtersList, restaurants)
                 emit(ResponseState.Success(restaurantInfo))
 
             } catch (e: Exception) {
