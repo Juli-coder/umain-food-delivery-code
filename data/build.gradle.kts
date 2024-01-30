@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.umain.data"
+    namespace = "com.food.data"
     compileSdk = 33
 
     defaultConfig {

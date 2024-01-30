@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.umain.codetest"
+    namespace = "com.food.delivery"
     compileSdk = 34
 
     defaultConfig {
